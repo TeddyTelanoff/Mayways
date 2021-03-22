@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
 
 	private Rigidbody2D rb;
 	private uint m_Grounds;
+	public bool Grounded { get => m_Grounds > 0; }
 
 	private int m_Dimension;
 	private int m_PlatformLayerNum;
@@ -43,11 +44,8 @@ public class Player : MonoBehaviour
 	private void FixedUpdate()
 	{
 		float jumpForce = 0;
-		if (IsGrounded())
-		{
+		if (Grounded)
 			jumpForce = m_JumpForce * (Input.GetAxisRaw("Vertical") > 0 ? 1 : 0);
-			m_LastOnPlatform = m_LateJump; // Can't double jump (yet)
-		}
 		
 		var accel = new Vector2(Input.GetAxis("Horizontal") * m_Speed, jumpForce);
 		rb.AddForce(accel);
@@ -65,10 +63,7 @@ public class Player : MonoBehaviour
 	private void OnTriggerExit2D(Collider2D other)
 	{
 		if (other.gameObject.layer == m_PlatformLayerNum)
-		{
-			m_LastOnPlatform = 0;
 			m_Grounds--;
-		}
 	}
 
 	private IEnumerator DelayEnableDimension()
@@ -77,7 +72,4 @@ public class Player : MonoBehaviour
 		m_Dimensions[m_Dimension].Enable();
 		yield return null;
 	}
-
-	public bool IsGrounded() =>
-		m_LastOnPlatform < m_LateJump || m_Grounds > 0;
 }
