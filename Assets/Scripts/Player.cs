@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 	[SerializeField]
-	private GameObject[] m_Dimensions;
+	private Dimension[] m_Dimensions;
 	[SerializeField]
 	private string m_PlatformLayer;
 	[SerializeField]
@@ -24,15 +24,16 @@ public class Player : MonoBehaviour
 	{
 		rb = GetComponent<Rigidbody2D>();
 		m_PlatformLayerNum = LayerMask.NameToLayer(m_PlatformLayer);
+		StartCoroutine(DelayEnableDimension());
 	}
 
 	private void Update()
 	{
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
-			m_Dimensions[m_Dimension].SetActive(false);
+			m_Dimensions[m_Dimension].Disable();
 			m_Dimension = (m_Dimension + 1) % m_Dimensions.Length;
-			m_Dimensions[m_Dimension].SetActive(true);
+			m_Dimensions[m_Dimension].Enable();
 		}
 	}
 
@@ -54,4 +55,11 @@ public class Player : MonoBehaviour
 		if (other.gameObject.layer == m_PlatformLayerNum)
 			m_Grounds--;
 	}
+
+	private IEnumerator DelayEnableDimension()
+    {
+		yield return new WaitForFixedUpdate();
+		m_Dimensions[m_Dimension].Enable();
+		yield return null;
+    }
 }
