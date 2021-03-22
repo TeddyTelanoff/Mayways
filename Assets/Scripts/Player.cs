@@ -14,11 +14,14 @@ public class Player : MonoBehaviour
 	private float m_JumpForce;
 
 	private Rigidbody2D rb;
-	public bool Grounded { get => m_Grounds > 0; }
 	private uint m_Grounds;
 
 	private int m_Dimension;
 	private int m_PlatformLayerNum;
+
+	[SerializeField]
+	private float m_LateJump;
+	private float m_LastOnPlatform;
 
 	private void Awake()
 	{
@@ -39,9 +42,18 @@ public class Player : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		float jumpForce = m_JumpForce * (Input.GetAxisRaw("Vertical") > 0 && Grounded ? 1 : 0);
+		float jumpForce = 0;
+		if (IsGrounded())
+		{
+			jumpForce = m_JumpForce * (Input.GetAxisRaw("Vertical") > 0 ? 1 : 0);
+			m_LastOnPlatform = m_LateJump; // Can't double jump (yet)
+		}
+		
 		var accel = new Vector2(Input.GetAxis("Horizontal") * m_Speed, jumpForce);
 		rb.AddForce(accel);
+
+		if (m_LastOnPlatform < m_LateJump) // <--- Optimus Prime
+			m_LastOnPlatform += Time.deltaTime;
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
@@ -53,13 +65,19 @@ public class Player : MonoBehaviour
 	private void OnTriggerExit2D(Collider2D other)
 	{
 		if (other.gameObject.layer == m_PlatformLayerNum)
+		{
+			m_LastOnPlatform = 0;
 			m_Grounds--;
+		}
 	}
 
 	private IEnumerator DelayEnableDimension()
-    {
+	{
 		yield return new WaitForFixedUpdate();
 		m_Dimensions[m_Dimension].Enable();
 		yield return null;
-    }
+	}
+
+	public bool IsGrounded() =>
+		m_LastOnPlatform < m_LateJump || m_Grounds > 0;
 }
