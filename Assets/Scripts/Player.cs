@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
 	private Rigidbody2D rb;
 	private uint m_Grounds;
 	public bool Grounded { get => m_Grounds > 0; }
+	public bool Playing { get; set; }
 
 	private int m_Dimension;
 	private int m_PlatformLayerNum;
@@ -26,6 +27,7 @@ public class Player : MonoBehaviour
 
 	private void Awake()
 	{
+		Playing = true;
 		rb = GetComponent<Rigidbody2D>();
 		m_PlatformLayerNum = LayerMask.NameToLayer(m_PlatformLayer);
 		StartCoroutine(DelayEnableDimension());
@@ -33,6 +35,9 @@ public class Player : MonoBehaviour
 
 	private void Update()
 	{
+		if (!Playing)
+			return;
+
 		if (Input.GetKeyDown(KeyCode.Space))
 		{
 			m_Dimensions[m_Dimension].Disable();
@@ -43,6 +48,9 @@ public class Player : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+		if (!Playing)
+			return;
+
 		float jumpForce = 0;
 		if (Grounded)
 			jumpForce = m_JumpForce * (Input.GetAxisRaw("Vertical") > 0 ? 1 : 0);
@@ -56,14 +64,20 @@ public class Player : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
+		if (!Playing)
+			return;
+
 		if (other.CompareTag("Goal"))
-			Debug.Log("Beat Level!");
+			Level.Active.Complete();
 		else if (other.gameObject.layer == m_PlatformLayerNum)
 			m_Grounds++;
 	}
 
 	private void OnTriggerExit2D(Collider2D other)
 	{
+		if (!Playing)
+			return;
+
 		if (other.gameObject.layer == m_PlatformLayerNum)
 			m_Grounds--;
 	}
