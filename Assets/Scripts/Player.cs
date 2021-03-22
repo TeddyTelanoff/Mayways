@@ -56,7 +56,9 @@ public class Player : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.gameObject.layer == m_PlatformLayerNum)
+		if (other.CompareTag("Goal"))
+			Debug.Log("Beat Level!");
+		else if (other.gameObject.layer == m_PlatformLayerNum)
 			m_Grounds++;
 	}
 
