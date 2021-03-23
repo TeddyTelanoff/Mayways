@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
 
 	private Rigidbody2D rb;
 	private uint m_Grounds;
-	public bool Grounded { get => m_Grounds > 0; }
+	public bool Grounded { get => m_Grounds > 0 || m_LastOnPlatform < m_LateJump; }
 	public bool Playing { get; private set; }
 
 	private int m_Dimension;
@@ -53,12 +53,16 @@ public class Player : MonoBehaviour
 
 		float jumpForce = 0;
 		if (Grounded)
+		{
 			jumpForce = m_JumpForce * (Input.GetAxisRaw("Vertical") > 0 ? 1 : 0);
+			if (jumpForce > 0)
+				m_LastOnPlatform = m_LateJump; // No double jump
+		}
 		
 		var accel = new Vector2(Input.GetAxis("Horizontal") * m_Speed, jumpForce);
 		rb.AddForce(accel);
 
-		if (m_LastOnPlatform < m_LateJump) // <--- Optimus Prime
+		if (m_Grounds == 0 && m_LastOnPlatform < m_LateJump) // <--- Optimus Prime
 			m_LastOnPlatform += Time.deltaTime;
 	}
 
@@ -79,7 +83,10 @@ public class Player : MonoBehaviour
 			return;
 
 		if (other.gameObject.layer == m_PlatformLayerNum)
-			m_Grounds--;
+		{
+			if (--m_Grounds == 0 && m_LastOnPlatform >= m_LateJump)
+				m_LastOnPlatform = 0;
+		}
 	}
 
 	private IEnumerator DelayEnableDimension()
@@ -93,5 +100,7 @@ public class Player : MonoBehaviour
     {
 		Playing = false;
 		rb.constraints = RigidbodyConstraints2D.None;
+		rb.AddTorque(Random.Range(-5, 5), ForceMode2D.Impulse);
+		rb.AddForceAtPosition(Random.insideUnitCircle * 25, transform.position, ForceMode2D.Impulse);
     }
 }
