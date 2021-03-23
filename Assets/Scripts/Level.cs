@@ -26,7 +26,7 @@ public class Level : MonoBehaviour
 
 	private void Update()
 	{
-		if (Input.GetKey(KeyCode.R))
+		if (Input.GetKeyDown(KeyCode.R))
 			Retry();
 	}
 
