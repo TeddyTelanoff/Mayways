@@ -30,6 +30,12 @@ public class Level : MonoBehaviour
 		m_CompleteScreen.SetActive(true);
 	}
 
+	public void Retry()
+	{
+		m_CompleteScreen.SetActive(false);
+		m_Player.Retry();
+	}
+
 	public void Next()
     {
 		int next = m_Level;

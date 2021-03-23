@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Player : MonoBehaviour
 	[SerializeField]
 	private float m_JumpForce;
 
+	private RigidbodyConstraints2D rbConstraints;
 	private Rigidbody2D rb;
 	private uint m_Grounds;
 	public bool Grounded { get => m_Grounds > 0 || m_LastOnPlatform < m_LateJump; }
@@ -24,12 +26,22 @@ public class Player : MonoBehaviour
 	private float m_LateJump;
 	private float m_LastOnPlatform;
 
+	private Vector2 m_StartPos;
+
+	[SerializeField]
+	private TextMeshProUGUI m_Timer;
+	private float m_Time;
+
 	private void Awake()
 	{
 		Playing = true;
 		rb = GetComponent<Rigidbody2D>();
+		rbConstraints = rb.constraints;
 		m_PlatformLayerNum = LayerMask.NameToLayer(m_PlatformLayer);
 		StartCoroutine(DelayEnableDimension());
+
+		m_LastOnPlatform = m_LateJump;
+		m_StartPos = transform.position;
 	}
 
 	private void Update()
@@ -61,6 +73,8 @@ public class Player : MonoBehaviour
 		var accel = new Vector2(Input.GetAxis("Horizontal") * m_Speed, jumpForce);
 		rb.AddForce(accel);
 
+		m_Time += Time.deltaTime;
+		m_Timer.text = m_Time.ToString("n3"); // <--- Unptimus Primer
 		if (m_Grounds == 0 && m_LastOnPlatform < m_LateJump) // <--- Optimus Prime
 			m_LastOnPlatform += Time.deltaTime;
 	}
@@ -93,6 +107,29 @@ public class Player : MonoBehaviour
 		yield return new WaitForFixedUpdate();
 		m_Dimensions[m_Dimension].Enable();
 		yield return null;
+	}
+
+	public void Retry()
+	{
+		transform.rotation = Quaternion.identity;
+		transform.position = m_StartPos;
+		rb.velocity = Vector2.zero;
+		rb.angularVelocity = 0;
+		m_Grounds = 0;
+
+		m_LastOnPlatform = m_LateJump;
+		m_Dimensions[m_Dimension].Disable();
+		m_Dimension ^= m_Dimension; // Fancy shmancy
+		m_Dimensions[m_Dimension].Enable();
+
+		m_Time = 0;
+		Enable();
+	}
+
+	public void Enable()
+	{
+		Playing = true;
+		rb.constraints = rbConstraints;
 	}
 
 	public void Disable()
