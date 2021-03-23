@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
 	private Rigidbody2D rb;
 	private uint m_Grounds;
 	public bool Grounded { get => m_Grounds > 0; }
-	public bool Playing { get; set; }
+	public bool Playing { get; private set; }
 
 	private int m_Dimension;
 	private int m_PlatformLayerNum;
@@ -88,4 +88,10 @@ public class Player : MonoBehaviour
 		m_Dimensions[m_Dimension].Enable();
 		yield return null;
 	}
+
+	public void Disable()
+    {
+		Playing = false;
+		rb.constraints = RigidbodyConstraints2D.None;
+    }
 }

@@ -24,7 +24,7 @@ public class Level : MonoBehaviour
 
 	public void Complete()
 	{
-		m_Player.Playing = false;
+		m_Player.Disable();
 		m_CompleteScreen.SetActive(true);
 	}
 }
