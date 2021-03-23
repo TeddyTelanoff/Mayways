@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -97,10 +96,10 @@ public class Player : MonoBehaviour
 	}
 
 	public void Disable()
-    {
+	{
 		Playing = false;
 		rb.constraints = RigidbodyConstraints2D.None;
 		rb.AddTorque(Random.Range(-5, 5), ForceMode2D.Impulse);
 		rb.AddForceAtPosition(Random.insideUnitCircle * 25, transform.position, ForceMode2D.Impulse);
-    }
+	}
 }

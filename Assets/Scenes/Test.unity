@@ -187,6 +187,7 @@ GameObject:
   m_Component:
   - component: {fileID: 102357352}
   - component: {fileID: 102357353}
+  - component: {fileID: 102357354}
   m_Layer: 0
   m_Name: Level
   m_TagString: Untagged
@@ -222,7 +223,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Player: {fileID: 423373723}
   m_CompleteScreen: {fileID: 187754369}
+  m_Level: 0
   m_Active: 1
+--- !u!114 &102357354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102357351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5f17486f704c3b4aa7c1d6f6f0e0e55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &158863756
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,7 +319,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 158863759}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 102357353}
+        m_TargetAssemblyTypeName: Level, Assembly-CSharp
+        m_MethodName: Next
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &158863759
 MonoBehaviour:
   m_ObjectHideFlags: 0
