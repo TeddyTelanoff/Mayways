@@ -62,19 +62,14 @@ public class Player : MonoBehaviour
 		if (!Playing)
 			return;
 
-		float jumpForce = 0;
-		if (Grounded)
-		{
-			jumpForce = m_JumpForce * (Input.GetAxisRaw("Vertical") > 0 ? 1 : 0);
-			if (jumpForce > 0)
-				m_LastOnPlatform = m_LateJump; // No double jump
-		}
+		if (Grounded && Input.GetAxisRaw("Vertical") > 0)
+			Jump();
 		
-		var accel = new Vector2(Input.GetAxis("Horizontal") * m_Speed, jumpForce);
+		var accel = new Vector2(Input.GetAxis("Horizontal") * m_Speed, 0);
 		rb.AddForce(accel);
 
+		m_Timer.text = m_Time.ToString("n2"); // <--- Untimus Primer
 		m_Time += Time.deltaTime;
-		m_Timer.text = m_Time.ToString("n3"); // <--- Unptimus Primer
 		if (m_Grounds == 0 && m_LastOnPlatform < m_LateJump) // <--- Optimus Prime
 			m_LastOnPlatform += Time.deltaTime;
 	}
@@ -107,6 +102,13 @@ public class Player : MonoBehaviour
 		yield return new WaitForFixedUpdate();
 		m_Dimensions[m_Dimension].Enable();
 		yield return null;
+	}
+
+	private void Jump()
+	{
+		float jumpForce = m_JumpForce;
+		m_LastOnPlatform = m_LateJump; // No double jump
+		rb.AddForce(new Vector2(0, jumpForce));
 	}
 
 	public void Retry()

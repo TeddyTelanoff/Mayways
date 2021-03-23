@@ -24,6 +24,12 @@ public class Level : MonoBehaviour
 		}
 	}
 
+	private void Update()
+	{
+		if (Input.GetKey(KeyCode.R))
+			Retry();
+	}
+
 	public void Complete()
 	{
 		m_Player.Disable();
@@ -37,7 +43,7 @@ public class Level : MonoBehaviour
 	}
 
 	public void Next()
-    {
+	{
 		int next = m_Level;
 		if (next < Build.LevelCount)
 			SceneManager.LoadSceneAsync(next + Build.Level0);
