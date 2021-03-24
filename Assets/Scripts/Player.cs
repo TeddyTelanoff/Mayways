@@ -4,33 +4,29 @@ using TMPro;
 
 public class Player : MonoBehaviour
 {
-	[SerializeField]
-	private Dimension[] m_Dimensions;
+	public Dimension[] m_Dimensions;
 	[SerializeField]
 	private string m_PlatformLayer;
-	[SerializeField]
-	private float m_Speed;
-	[SerializeField]
-	private float m_JumpForce;
+	public float m_Speed;
+	public float m_JumpForce;
 
 	private RigidbodyConstraints2D rbConstraints;
-	private Rigidbody2D rb;
+	public Rigidbody2D rb;
 	private uint m_Grounds;
 	public bool Grounded { get => m_Grounds > 0 || m_LastOnPlatform < m_LateJump; }
 	public bool Playing { get; private set; }
 
-	private int m_Dimension;
+	public int m_Dimension;
 	private int m_PlatformLayerNum;
 
-	[SerializeField]
-	private float m_LateJump;
+	public float m_LateJump;
 	private float m_LastOnPlatform;
 
-	private Vector2 m_StartPos;
+	public Vector2 m_StartPos;
 
 	[SerializeField]
 	private TextMeshProUGUI m_Timer;
-	private float m_Time;
+	public float m_Time;
 
 	private void Awake()
 	{

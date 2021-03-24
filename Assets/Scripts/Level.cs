@@ -6,14 +6,10 @@ public class Level : MonoBehaviour
 	public static Level Active { get; private set; }
 	public static int ActiveIndex { get; private set; }
 
-	[SerializeField]
-	private Player m_Player;
-	[SerializeField]
-	private GameObject m_CompleteScreen;
-	[SerializeField]
-	private int m_Level;
-	[SerializeField]
-	private bool m_Active = true;
+	public Player m_Player;
+	public GameObject m_CompleteScreen;
+	public int m_Level;
+	public bool m_Active = true;
 
 	private void Awake()
 	{
