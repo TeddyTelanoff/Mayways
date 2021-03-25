@@ -102,8 +102,10 @@ public class Player : MonoBehaviour
 
 		if (other.CompareTag("Goal"))
 			Level.Active.Complete();
-		else if (other.TryGetComponent<Jumpable>(out var unused))
+		else if (other.HasComponent<Jumpable>())
 			m_Grounds++;
+		else if (other.HasComponent<Astroid>())
+			Disable();
 	}
 
 	private void OnTriggerExit2D(Collider2D other)
