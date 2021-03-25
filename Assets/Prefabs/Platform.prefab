@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5256511380120443942}
   - component: {fileID: 5256511380120443943}
+  - component: {fileID: 674091074147711909}
   m_Layer: 31
   m_Name: Jumpable
   m_TagString: Untagged
@@ -57,6 +58,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.01}
   m_EdgeRadius: 0
+--- !u!114 &674091074147711909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5256511380120443937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2256fecc626e9904584854bfe146d438, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5256511380982816481
 GameObject:
   m_ObjectHideFlags: 0
@@ -67,7 +80,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5256511380982816487}
   - component: {fileID: 5256511380982816484}
-  m_Layer: 0
+  m_Layer: 31
   m_Name: Platform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,6 +139,10 @@ PrefabInstance:
     - target: {fileID: 3488786013442641265, guid: 6b119891bc2796a4ea3d3b2c6d3d38cc, type: 3}
       propertyPath: m_Name
       value: Platform Model
+      objectReference: {fileID: 0}
+    - target: {fileID: 3488786013442641265, guid: 6b119891bc2796a4ea3d3b2c6d3d38cc, type: 3}
+      propertyPath: m_Layer
+      value: 31
       objectReference: {fileID: 0}
     - target: {fileID: 3488786013442641277, guid: 6b119891bc2796a4ea3d3b2c6d3d38cc, type: 3}
       propertyPath: m_RootOrder

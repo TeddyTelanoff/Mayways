@@ -35,8 +35,8 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - Player
+  - Player Bounds
   - Platform
   m_SortingLayers:
   - name: Default

@@ -4,20 +4,25 @@ using TMPro;
 
 public class Player : MonoBehaviour
 {
+	public static Player Active { get; private set; }
+
 	public Dimension[] m_Dimensions;
-	[SerializeField]
-	private string m_PlatformLayer;
 	public float m_Speed;
 	public float m_JumpForce;
+	public float m_ExplosionForce;
+	public float m_ExplosionRadius;
 
-	private RigidbodyConstraints2D rbConstraints;
+	[SerializeField]
+	private ParticleSystem m_System;
+
+	[HideInInspector]
 	public Rigidbody2D rb;
+	private RigidbodyConstraints2D rbConstraints;
 	private uint m_Grounds;
 	public bool Grounded { get => m_Grounds > 0 || m_LastOnPlatform < m_LateJump; }
 	public bool Playing { get; private set; }
 
 	public int m_Dimension;
-	private int m_PlatformLayerNum;
 
 	public float m_LateJump;
 	private float m_LastOnPlatform;
@@ -33,11 +38,11 @@ public class Player : MonoBehaviour
 		Playing = true;
 		rb = GetComponent<Rigidbody2D>();
 		rbConstraints = rb.constraints;
-		m_PlatformLayerNum = LayerMask.NameToLayer(m_PlatformLayer);
 		StartCoroutine(DelayEnableDimension());
 
 		m_LastOnPlatform = m_LateJump;
 		m_StartPos = transform.position;
+		Active = this;
 	}
 
 	private void Update()
@@ -50,6 +55,26 @@ public class Player : MonoBehaviour
 			m_Dimensions[m_Dimension].Disable();
 			m_Dimension = (m_Dimension + 1) % m_Dimensions.Length;
 			m_Dimensions[m_Dimension].Enable();
+		}
+
+		if (Input.GetMouseButtonDown(0))
+		{
+			m_System.Play();
+			var colliders = Physics2D.OverlapCircleAll(transform.position, 15);
+			foreach (var obj in colliders)
+			{
+				if (obj == GetComponent<Collider2D>())
+					continue;
+
+				var rb = obj.GetComponent<Rigidbody2D>();
+				if (rb != null)
+				{
+					var diff = obj.transform.position - transform.position;
+					float dist = diff.magnitude;
+					if (dist < m_ExplosionRadius && dist > 0)
+						rb.AddForce(diff.normalized * (m_ExplosionForce * (m_ExplosionRadius - dist)), ForceMode2D.Impulse);
+				}
+			}
 		}
 	}
 
@@ -77,7 +102,7 @@ public class Player : MonoBehaviour
 
 		if (other.CompareTag("Goal"))
 			Level.Active.Complete();
-		else if (other.gameObject.layer == m_PlatformLayerNum)
+		else if (other.TryGetComponent<Jumpable>(out var unused))
 			m_Grounds++;
 	}
 
@@ -86,7 +111,7 @@ public class Player : MonoBehaviour
 		if (!Playing)
 			return;
 
-		if (other.gameObject.layer == m_PlatformLayerNum)
+		if (other.TryGetComponent<Jumpable>(out var unused))
 		{
 			if (--m_Grounds == 0 && m_LastOnPlatform >= m_LateJump)
 				m_LastOnPlatform = 0;
