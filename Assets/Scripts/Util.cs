@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
-public class Util
+public static class Util
 {
-    public static bool HasComponent<T>(this Component obj) =>
-        obj.TryGetComponent(out T unused);
+    public static bool HasComponent<T, C>(this C obj) where C: Component =>
+        obj.TryGetComponent(out T _);
 }
