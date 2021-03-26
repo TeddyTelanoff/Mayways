@@ -2,6 +2,6 @@
 
 public static class Util
 {
-    public static bool HasComponent<T, C>(this C obj) where C: Component =>
+    public static bool HasComponent<T>(this Component obj) =>
         obj.TryGetComponent(out T _);
 }
